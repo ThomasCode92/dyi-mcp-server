@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "bun run --watch ./src/index.ts",
-    "start": "bun run ./src/index.ts"
+    "start": "bun run ./src/index.ts",
+    "inspector": "npx @modelcontextprotocol/inspector bun ./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

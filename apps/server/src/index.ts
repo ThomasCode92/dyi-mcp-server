@@ -1,4 +1,4 @@
-import { sendResponse } from "@/utils";
+import { sendResponse, tools } from "@/utils";
 
 const serverInfo = {
   name: "Coffee Shop Server",
@@ -18,6 +18,14 @@ const serverInfo = {
           };
           sendResponse(json.id, result);
         }
+      }
+      if (json.method === "tools/list") {
+        const toolsList = tools.map((tool) => ({
+          name: tool.name,
+          description: tool.description,
+          inputSchema: tool.inputSchema,
+        }));
+        sendResponse(json.id, { tools: toolsList });
       }
     } catch (error) {
       console.error(error);
