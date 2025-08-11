@@ -1,8 +1,14 @@
+import { drinks } from "@/data";
+
 export const tools = [
   {
     name: "getDrinkNames",
     description: "Get the names of the drinks in the shop",
     inputSchema: { type: "object", properties: {} },
+    execute: async (args: any) => {
+      const names = drinks.map((drink) => drink.name);
+      return { content: [{ type: "text", text: JSON.stringify({ names }) }] };
+    },
   },
   {
     name: "getDrinkInfo",
@@ -11,6 +17,12 @@ export const tools = [
       type: "object",
       properties: { name: { type: "string" } },
       required: ["name"],
+    },
+    execute: async (args: any) => {
+      const drink = drinks.find((drink) => drink.name === args.name) || {
+        error: "Drink not found",
+      };
+      return { content: [{ type: "text", text: JSON.stringify(drink) }] };
     },
   },
 ];

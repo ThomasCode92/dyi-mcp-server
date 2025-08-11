@@ -27,6 +27,20 @@ const serverInfo = {
         }));
         sendResponse(json.id, { tools: toolsList });
       }
+      if (json.method === "tools/call") {
+        const tool = tools.find((tool) => tool.name === json.params.name);
+        if (tool) {
+          const result = await tool.execute(json.params.arguments);
+          sendResponse(json.id, result);
+        } else {
+          sendResponse(json.id, {
+            error: {
+              code: -32602,
+              message: `MCP error -32602: Tool ${json.params.name} not found`,
+            },
+          });
+        }
+      }
     } catch (error) {
       console.error(error);
     }
