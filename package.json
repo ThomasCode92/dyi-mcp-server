@@ -1,0 +1,12 @@
+{
+  "name": "dyi-mcp-server",
+  "version": "1.0.0",
+  "description": "An MCP STDIO server build from scratch to understand how the the Model Context Protocol actually functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
