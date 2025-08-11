@@ -1,4 +1,4 @@
-import { sendResponse, tools } from "@/utils";
+import { resources, sendResponse, tools } from "@/utils";
 
 const serverInfo = {
   name: "Coffee Shop Server",
@@ -13,7 +13,10 @@ const serverInfo = {
         if (json.method === "initialize") {
           const result = {
             protocolVersion: "2025-06-18",
-            capabilities: { tools: { changeList: true } },
+            capabilities: {
+              tools: { changeList: true },
+              resources: { changeList: true },
+            },
             serverInfo,
           };
           sendResponse(json.id, result);
@@ -38,6 +41,24 @@ const serverInfo = {
               code: -32602,
               message: `MCP error -32602: Tool ${json.params.name} not found`,
             },
+          });
+        }
+      }
+      if (json.method === "resources/list") {
+        const resourcesList = resources.map((resource) => ({
+          uri: resource.uri,
+          name: resource.name,
+        }));
+        sendResponse(json.id, { resources: resourcesList });
+      }
+      if (json.method === "resources/read") {
+        const uri = json.params.uri;
+        const resource = resources.find((resource) => resource.uri === uri);
+        if (resource) {
+          sendResponse(json.id, await resource.get());
+        } else {
+          sendResponse(json.id, {
+            error: { code: -32602, message: "Resource not found" },
           });
         }
       }

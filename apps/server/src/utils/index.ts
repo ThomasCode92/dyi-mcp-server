@@ -27,6 +27,18 @@ export const tools = [
   },
 ];
 
+export const resources = [
+  {
+    uri: "menu://app",
+    name: "menu",
+    get: async () => {
+      return {
+        contents: [{ uri: "menu://app", text: JSON.stringify(drinks) }],
+      };
+    },
+  },
+];
+
 export function sendResponse(id: number, result: object) {
   const response = { id, jsonrpc: "2.0", result };
   console.log(JSON.stringify(response));
