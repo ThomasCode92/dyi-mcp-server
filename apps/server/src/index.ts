@@ -1,9 +1,16 @@
-const prompt = "Type something: ";
-process.stdout.write(prompt);
+import { sendResponse } from "@/utils";
 
 (async function main() {
   for await (const line of console) {
-    console.log(`You typed: ${line}`);
-    process.stdout.write(prompt);
+    try {
+      const json = JSON.parse(line);
+      if (json.jsonrpc === "2.0") {
+        if (json.method === "initialize") {
+          sendResponse(json.id, {});
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 })();
