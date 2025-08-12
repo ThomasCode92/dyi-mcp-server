@@ -62,6 +62,9 @@ const serverInfo = {
           });
         }
       }
+      if (json.method === "ping") {
+        sendResponse(json.id, {});
+      }
     } catch (error) {
       console.error(error);
     }
