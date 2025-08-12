@@ -1,0 +1,12 @@
+{
+  "name": "dyi-mcp-server",
+  "version": "1.0.0",
+  "description": "An MCP STDIO server build from scratch to understand how the the Model Context Protocol actually functions",
+  "scripts": {
+    "dev": "pnpm --filter './apps/*' dev",
+    "start": "pnpm --filter './apps/*' start"
+  },
+  "keywords": [],
+  "author": "Thomas",
+  "license": "ISC"
+}
