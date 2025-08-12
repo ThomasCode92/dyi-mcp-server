@@ -1,4 +1,12 @@
+import * as readline from "node:readline";
+import { stdin, stdout } from "node:process";
+
 import { resources, sendResponse, tools } from "@/utils";
+
+const rl = readline.createInterface({
+  input: stdin,
+  output: stdout,
+});
 
 const serverInfo = {
   name: "Coffee Shop Server",
@@ -6,7 +14,7 @@ const serverInfo = {
 };
 
 (async function main() {
-  for await (const line of console) {
+  for await (const line of rl) {
     try {
       const json = JSON.parse(line);
       if (json.jsonrpc === "2.0") {
