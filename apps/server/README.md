@@ -1,15 +1,20 @@
-# server
+# MCP Server
 
-To install dependencies:
+A STDIO MCP server build from scratch without any third-party libraries.
+
+> This project is based on the Youtube video '[Build a custom mcp server in 15 mins](https://www.youtube.com/watch?v=nTMSyldeVSw)' from Jack Herrington.
+
+## 🚀 Core Technologies
+
+- [Node.js](https://nodejs.org/) - JavaScript runtime.
+- [TypeScript](https://www.typescriptlang.org/) - A superset of JavaScript that adds static types.
+- [Model Context Protocol](https://modelcontextprotocol.io/) - The protocol for building AI applications.
+
+## 🛠️ Getting Started
 
 ```bash
-bun install
+pnpm run dev        # start the server in development mode
+pnpm run start      # start the server in production mode
+
+pnpm run inspector  # Start the MCP inspector
 ```
-
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.2.10. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
