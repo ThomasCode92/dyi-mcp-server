@@ -6,6 +6,14 @@ export interface InitializeResponse {
   };
 }
 
+export type Content = {
+  text: string;
+};
+
+export interface Response {
+  content: Content[];
+}
+
 export type Tool = {
   name: string;
   description: string;

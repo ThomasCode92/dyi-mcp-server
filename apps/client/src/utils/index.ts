@@ -1,6 +1,19 @@
 import type { ChildProcessByStdio } from "node:child_process";
 import * as readline from "node:readline/promises";
 
+import type { Content } from "@/types";
+
+export function dumpContent(content: Content[]) {
+  for (const line of content) {
+    try {
+      const parsedLine = JSON.parse(line.text);
+      console.log(parsedLine);
+    } catch (error) {
+      console.log(line.text);
+    }
+  }
+}
+
 export function send(
   serverProcess: ChildProcessByStdio<any, any, any>,
   rl: readline.Interface,

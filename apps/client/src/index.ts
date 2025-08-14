@@ -2,8 +2,8 @@ import { intro, isCancel, select } from "@clack/prompts";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
-import type { InitializeResponse, Resource, Tool } from "@/types";
-import { send } from "@/utils";
+import type { InitializeResponse, Resource, Response, Tool } from "@/types";
+import { dumpContent, send } from "@/utils";
 
 const clientInfo = {
   protocolVersion: "2025-06-18",
@@ -68,6 +68,11 @@ const clientInfo = {
       const options = tools.map((tool) => ({ value: tool, label: tool.name }));
       const tool = await select({ message: "Select a tool.", options });
       if (isCancel(tool)) process.exit(0);
+
+      // calling the tool
+      const params = { name: tool.name };
+      const result: Response = await sendToServer("tools/call", lastId, params);
+      dumpContent(result.content);
     }
   }
 })();
