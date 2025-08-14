@@ -3,6 +3,12 @@ import * as readline from "node:readline/promises";
 
 import { send } from "@/utils";
 
+const clientInfo = {
+  protocolVersion: "2025-06-18",
+  capabilities: {},
+  clientInfo: { name: "diy-client", version: "0.1.0" },
+};
+
 (async function main() {
   const serverProcess = spawn("tsx", ["../server/src/index.ts"], {
     stdio: ["pipe", "pipe", "inherit"],
@@ -15,4 +21,12 @@ import { send } from "@/utils";
   });
 
   const sendToServer = send(serverProcess, rl);
+
+  let lastId = 0;
+  const result = await sendToServer("initialize", lastId, {
+    protocolVersion: "2025-06-18",
+    capabilities: {},
+    clientInfo,
+  });
+  await sendToServer("notifications/initialized", lastId, {}, true);
 })();
