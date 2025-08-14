@@ -1,4 +1,4 @@
-import { intro, isCancel, select } from "@clack/prompts";
+import { intro, isCancel, select, text } from "@clack/prompts";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
@@ -69,8 +69,18 @@ const clientInfo = {
       const tool = await select({ message: "Select a tool.", options });
       if (isCancel(tool)) process.exit(0);
 
+      // ask for input parameters, if needed
+      const args: Record<string, any> = {};
+      for (const key of Object.keys(tool.inputSchema.properties ?? {}).filter(
+        (key) => tool.inputSchema.properties?.[key]?.type === "string",
+      )) {
+        const answer = await text({ message: `${key}:`, initialValue: "" });
+        if (isCancel(answer)) process.exit(0);
+        args[key] = answer;
+      }
+
       // calling the tool
-      const params = { name: tool.name };
+      const params = { name: tool.name, arguments: args };
       const result: Response = await sendToServer("tools/call", lastId, params);
       dumpContent(result.content);
     }
