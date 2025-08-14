@@ -8,6 +8,18 @@ importers:
 
   .: {}
 
+  apps/client:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.18
+        version: 22.17.1
+      tsx:
+        specifier: ^4.20.4
+        version: 4.20.4
+      typescript:
+        specifier: ^5.8.3
+        version: 5.9.2
+
   apps/server:
     devDependencies:
       '@types/node':
