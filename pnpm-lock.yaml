@@ -9,6 +9,13 @@ importers:
   .: {}
 
   apps/client:
+    dependencies:
+      '@clack/prompts':
+        specifier: ^0.11.0
+        version: 0.11.0
+      chalk:
+        specifier: ^5.5.0
+        version: 5.5.0
     devDependencies:
       '@types/node':
         specifier: ^22.15.18
@@ -33,6 +40,12 @@ importers:
         version: 5.9.2
 
 packages:
+
+  '@clack/core@0.5.0':
+    resolution: {integrity: sha512-p3y0FIOwaYRUPRcMO7+dlmLh8PSRcrjuTndsiA0WAFbWES0mLZlrjVoBRZ9DzkPFJZG6KGkJmoEAY0ZcVWTkow==}
+
+  '@clack/prompts@0.11.0':
+    resolution: {integrity: sha512-pMN5FcrEw9hUkZA4f+zLlzivQSeQf5dRGJjSUbvVYDLvpKCdQx5OaknvKzgbtXOizhP+SJJJjqEbOe55uKKfAw==}
 
   '@esbuild/aix-ppc64@0.25.8':
     resolution: {integrity: sha512-urAvrUedIqEiFR3FYSLTWQgLu5tb+m0qZw0NBEasUeo6wuqatkMDaRT+1uABiGXEu5vqgPd7FGE1BhsAIy9QVA==}
@@ -193,6 +206,10 @@ packages:
   '@types/node@22.17.1':
     resolution: {integrity: sha512-y3tBaz+rjspDTylNjAX37jEC3TETEFGNJL6uQDxwF9/8GLLIjW1rvVHlynyuUKMnMr1Roq8jOv3vkopBjC4/VA==}
 
+  chalk@5.5.0:
+    resolution: {integrity: sha512-1tm8DTaJhPBG3bIkVeZt1iZM9GfSX2lzOeDVZH9R9ffRHpmHvxZ/QhgQH/aDTkswQVt+YHdXAdS/In/30OjCbg==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
   esbuild@0.25.8:
     resolution: {integrity: sha512-vVC0USHGtMi8+R4Kz8rt6JhEWLxsv9Rnu/lGYbPR8u47B+DCBksq9JarW0zOO7bs37hyOK1l2/oqtbciutL5+Q==}
     engines: {node: '>=18'}
@@ -206,8 +223,14 @@ packages:
   get-tsconfig@4.10.1:
     resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
+  picocolors@1.1.1:
+    resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
+
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
+
+  sisteransi@1.0.5:
+    resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
   tsx@4.20.4:
     resolution: {integrity: sha512-yyxBKfORQ7LuRt/BQKBXrpcq59ZvSW0XxwfjAt3w2/8PmdxaFzijtMhTawprSHhpzeM5BgU2hXHG3lklIERZXg==}
@@ -223,6 +246,17 @@ packages:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
 snapshots:
+
+  '@clack/core@0.5.0':
+    dependencies:
+      picocolors: 1.1.1
+      sisteransi: 1.0.5
+
+  '@clack/prompts@0.11.0':
+    dependencies:
+      '@clack/core': 0.5.0
+      picocolors: 1.1.1
+      sisteransi: 1.0.5
 
   '@esbuild/aix-ppc64@0.25.8':
     optional: true
@@ -306,6 +340,8 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  chalk@5.5.0: {}
+
   esbuild@0.25.8:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.25.8
@@ -342,7 +378,11 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  picocolors@1.1.1: {}
+
   resolve-pkg-maps@1.0.0: {}
+
+  sisteransi@1.0.5: {}
 
   tsx@4.20.4:
     dependencies:
