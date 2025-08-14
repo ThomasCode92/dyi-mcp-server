@@ -2,7 +2,7 @@ import { intro, isCancel, select, text } from "@clack/prompts";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
-import type { InitializeResponse, Resource, Response, Tool } from "@/types";
+import type { Content, InitializeResponse, Resource, Tool } from "@/types";
 import { dumpContent, send } from "@/utils";
 
 const clientInfo = {
@@ -81,8 +81,31 @@ const clientInfo = {
 
       // calling the tool
       const params = { name: tool.name, arguments: args };
-      const result: Response = await sendToServer("tools/call", lastId, params);
+      const result: { content: Content[] } = await sendToServer(
+        "tools/call",
+        lastId,
+        params,
+      );
       dumpContent(result.content);
+    }
+
+    // handle resource selection
+    if (action === "resource") {
+      const options = resources.map((resource) => ({
+        value: resource,
+        label: resource.name,
+      }));
+      const resource = await select({ message: "Select a resource.", options });
+      if (isCancel(resource)) process.exit(0);
+
+      // reading the resource
+      const params = { uri: resource.uri };
+      const result: { contents: Content[] } = await sendToServer(
+        "resources/read",
+        lastId,
+        params,
+      );
+      dumpContent(result.contents);
     }
   }
 })();
