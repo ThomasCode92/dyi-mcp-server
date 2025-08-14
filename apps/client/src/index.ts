@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
-import type { InitializeResponse, Tool } from "@/types";
+import type { InitializeResponse, Resource, Tool } from "@/types";
 import { send } from "@/utils";
 
 const clientInfo = {
@@ -31,10 +31,17 @@ const clientInfo = {
   });
   await sendToServer("notifications/initialized", lastId, {}, true);
 
+  const params = { _meta: { progressToken: 1 } }; // params for subsequent requests
+
   // get list of tools
-  const params = { _meta: { progressToken: 1 } };
   const getToolsList = () => sendToServer("tools/list", lastId, params);
   const tools: Tool[] = result.capabilities.tools
     ? (await getToolsList()).tools
+    : [];
+
+  // get list of resources
+  const getResourcesList = () => sendToServer("resources/list", lastId, params);
+  const resources: Resource[] = result.capabilities.resources
+    ? (await getResourcesList()).resources
     : [];
 })();

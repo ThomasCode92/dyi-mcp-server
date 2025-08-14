@@ -13,3 +13,8 @@ export type Tool = {
     properties: Record<string, any>;
   };
 };
+
+export type Resource = {
+  uri: string;
+  name: string;
+};
