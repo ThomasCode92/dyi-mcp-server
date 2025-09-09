@@ -3,6 +3,9 @@ import * as readline from "node:readline/promises";
 
 import type { Content } from "@/types";
 
+const MODEL = "claude-sonnet-4";
+const MAX_TOKENS = 4096;
+
 export function dumpContent(content: Content[]) {
   for (const line of content) {
     try {
@@ -33,4 +36,18 @@ export function send(
     const json = await rl.question("");
     return JSON.parse(json).result;
   };
+}
+
+export async function callAI(
+  messages: { role: string; content: string }[],
+  tools: any[],
+) {
+  const body = { model: MODEL, max_tokens: MAX_TOKENS, messages, tools };
+  const response = await fetch("http://localhost:4141/v1/messages", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json();
+  return (data as { content: string }).content;
 }
