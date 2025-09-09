@@ -22,3 +22,11 @@ export type Resource = {
   uri: string;
   name: string;
 };
+
+export type Message = {
+  type?: string;
+  role: string;
+  content: any;
+  name?: string;
+  input?: any;
+};

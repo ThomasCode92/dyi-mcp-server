@@ -2,7 +2,13 @@ import { intro, isCancel, select, text } from "@clack/prompts";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
-import type { Content, InitializeResponse, Resource, Tool } from "@/types";
+import type {
+  Content,
+  InitializeResponse,
+  Message,
+  Resource,
+  Tool,
+} from "@/types";
 import { dumpContent, send } from "@/utils";
 
 const clientInfo = {
@@ -48,7 +54,10 @@ const clientInfo = {
   intro(`Connected to ${serverInfo.name} v${serverInfo.version}`);
 
   while (true) {
-    const options: Array<{ value: string; label: string }> = [];
+    const options: Array<{ value: string; label: string }> = [
+      { value: "ai", label: "Chat with AI." },
+    ];
+
     if (resources.length > 0) {
       options.unshift({ value: "resource", label: "Get a resource." });
     }
@@ -106,6 +115,17 @@ const clientInfo = {
         params,
       );
       dumpContent(result.contents);
+    }
+
+    // handle ai chat
+    if (action === "ai") {
+      const prompt = await text({
+        message: "What would you like to ask?",
+        defaultValue: "What kinds of drinks do you have",
+      });
+      if (isCancel(prompt)) process.exit(0);
+
+      const messages: Message[] = [{ role: "user", content: prompt }];
     }
   }
 })();
