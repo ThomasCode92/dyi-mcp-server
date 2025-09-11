@@ -30,3 +30,17 @@ export type Message = {
   name?: string;
   input?: any;
 };
+
+type TextPromptResult = {
+  type: "text";
+  text: string;
+};
+
+type ToolUsePromptResult = {
+  type: "tool_use";
+  id: string;
+  name: string;
+  input: Record<string, any>;
+};
+
+export type PromptResult = TextPromptResult | ToolUsePromptResult;

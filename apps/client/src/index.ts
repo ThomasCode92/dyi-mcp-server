@@ -6,10 +6,12 @@ import type {
   Content,
   InitializeResponse,
   Message,
+  PromptResult,
   Resource,
   Tool,
 } from "@/types";
 import { callAI, dumpContent, send } from "@/utils";
+import chalk from "chalk";
 
 const clientInfo = {
   protocolVersion: "2025-06-18",
@@ -52,7 +54,9 @@ const clientInfo = {
     : [];
 
   // function to call AI with tools
-  function callAIWithTools(messages: { role: string; content: string }[]) {
+  function callAIWithTools(
+    messages: { role: string; content: string }[],
+  ): Promise<PromptResult[]> {
     return callAI(
       messages,
       tools.map((tool) => ({
@@ -139,7 +143,17 @@ const clientInfo = {
 
       const messages: Message[] = [{ role: "user", content: prompt }];
       const promptResult = await callAIWithTools(messages);
-      console.log(promptResult);
+      messages.push({ role: "assistant", content: promptResult });
+
+      for (const tool of promptResult) {
+        if (tool.type === "text") console.log(tool.text);
+      }
+
+      const result = promptResult[promptResult.length - 1]!;
+      if (result.type === "tool_use") {
+        const message = `Requesting tool call ${result.name} - ${JSON.stringify(result.input)}`;
+        console.log(chalk.blackBright(message));
+      }
     }
   }
 })();

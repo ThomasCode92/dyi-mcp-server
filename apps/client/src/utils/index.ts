@@ -49,5 +49,5 @@ export async function callAI(
   });
 
   const data = await response.json();
-  return (data as { content: string }).content;
+  return (data as { content: any }).content;
 }
