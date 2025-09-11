@@ -9,7 +9,7 @@ import type {
   Resource,
   Tool,
 } from "@/types";
-import { dumpContent, send } from "@/utils";
+import { callAI, dumpContent, send } from "@/utils";
 
 const clientInfo = {
   protocolVersion: "2025-06-18",
@@ -50,6 +50,18 @@ const clientInfo = {
   const resources: Resource[] = capabilities.resources
     ? (await getResourcesList()).resources
     : [];
+
+  // function to call AI with tools
+  function callAIWithTools(messages: { role: string; content: string }[]) {
+    return callAI(
+      messages,
+      tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        input_schema: tool.inputSchema,
+      })),
+    );
+  }
 
   intro(`Connected to ${serverInfo.name} v${serverInfo.version}`);
 
@@ -126,6 +138,8 @@ const clientInfo = {
       if (isCancel(prompt)) process.exit(0);
 
       const messages: Message[] = [{ role: "user", content: prompt }];
+      const promptResult = await callAIWithTools(messages);
+      console.log(promptResult);
     }
   }
 })();
