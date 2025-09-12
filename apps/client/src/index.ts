@@ -149,11 +149,12 @@ const clientInfo = {
         if (tool.type === "text") console.log(tool.text);
       }
 
-      const result = promptResult[promptResult.length - 1]!;
-      if (result.type === "tool_use") {
+      let result = promptResult[promptResult.length - 1]!;
+      while (result.type === "tool_use") {
         const message = `Requesting tool call ${result.name} - ${JSON.stringify(result.input)}`;
-        console.log(chalk.blackBright(message));
+        console.log(chalk.cyan(message));
 
+        // proxy the tool call, wanted by the AI, to the MCP Server
         const params = { name: result.name, arguments: result.input };
         const { content }: { content: Content[] } = await sendToServer(
           "tools/call",
@@ -161,12 +162,22 @@ const clientInfo = {
           params,
         );
 
-        const contentMsg = {
+        let contentMsg = {
           type: "tool_result",
           tool_use_id: result.id,
           content: content[0]!.text,
         };
         messages.push({ role: "user", content: [contentMsg] });
+
+        const followupResult = await callAIWithTools(messages);
+        console.log(JSON.stringify(followupResult));
+        messages.push({ role: "assistant", content: followupResult });
+
+        for (const tool of followupResult) {
+          if (tool.type === "text") console.log(tool.text);
+        }
+
+        result = followupResult[followupResult.length - 1]!;
       }
     }
   }
