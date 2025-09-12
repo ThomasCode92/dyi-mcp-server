@@ -2,8 +2,16 @@ import { intro, isCancel, select, text } from "@clack/prompts";
 import { spawn } from "node:child_process";
 import * as readline from "node:readline/promises";
 
-import type { Content, InitializeResponse, Resource, Tool } from "@/types";
-import { dumpContent, send } from "@/utils";
+import type {
+  Content,
+  InitializeResponse,
+  Message,
+  PromptResult,
+  Resource,
+  Tool,
+} from "@/types";
+import { callAI, dumpContent, send } from "@/utils";
+import chalk from "chalk";
 
 const clientInfo = {
   protocolVersion: "2025-06-18",
@@ -45,10 +53,27 @@ const clientInfo = {
     ? (await getResourcesList()).resources
     : [];
 
+  // function to call AI with tools
+  function callAIWithTools(
+    messages: { role: string; content: string }[],
+  ): Promise<PromptResult[]> {
+    return callAI(
+      messages,
+      tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        input_schema: tool.inputSchema,
+      })),
+    );
+  }
+
   intro(`Connected to ${serverInfo.name} v${serverInfo.version}`);
 
   while (true) {
-    const options: Array<{ value: string; label: string }> = [];
+    const options: Array<{ value: string; label: string }> = [
+      { value: "ai", label: "Chat with AI." },
+    ];
+
     if (resources.length > 0) {
       options.unshift({ value: "resource", label: "Get a resource." });
     }
@@ -106,6 +131,54 @@ const clientInfo = {
         params,
       );
       dumpContent(result.contents);
+    }
+
+    // handle ai chat
+    if (action === "ai") {
+      const prompt = await text({
+        message: "What would you like to ask?",
+        defaultValue: "What kinds of drinks do you have",
+      });
+      if (isCancel(prompt)) process.exit(0);
+
+      const messages: Message[] = [{ role: "user", content: prompt }];
+      const promptResult = await callAIWithTools(messages);
+      messages.push({ role: "assistant", content: promptResult });
+
+      for (const tool of promptResult) {
+        if (tool.type === "text") console.log(tool.text);
+      }
+
+      let result = promptResult[promptResult.length - 1]!;
+      while (result.type === "tool_use") {
+        const message = `Requesting tool call ${result.name} - ${JSON.stringify(result.input)}`;
+        console.log(chalk.cyan(message));
+
+        // proxy the tool call, wanted by the AI, to the MCP Server
+        const params = { name: result.name, arguments: result.input };
+        const { content }: { content: Content[] } = await sendToServer(
+          "tools/call",
+          lastId,
+          params,
+        );
+
+        let contentMsg = {
+          type: "tool_result",
+          tool_use_id: result.id,
+          content: content[0]!.text,
+        };
+        messages.push({ role: "user", content: [contentMsg] });
+
+        const followupResult = await callAIWithTools(messages);
+        console.log(JSON.stringify(followupResult));
+        messages.push({ role: "assistant", content: followupResult });
+
+        for (const tool of followupResult) {
+          if (tool.type === "text") console.log(tool.text);
+        }
+
+        result = followupResult[followupResult.length - 1]!;
+      }
     }
   }
 })();
