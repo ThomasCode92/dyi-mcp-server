@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "An MCP STDIO server build from scratch to understand how the the Model Context Protocol actually functions",
   "scripts": {
-    "dev": "pnpm --filter './apps/*' dev",
-    "start": "pnpm --filter './apps/*' start"
+    "dev:server": "pnpm run --filter=server dev",
+    "dev:client": "pnpm run --filter=client dev"
   },
   "keywords": [],
   "author": "Thomas",
