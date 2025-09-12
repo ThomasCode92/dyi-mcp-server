@@ -153,6 +153,20 @@ const clientInfo = {
       if (result.type === "tool_use") {
         const message = `Requesting tool call ${result.name} - ${JSON.stringify(result.input)}`;
         console.log(chalk.blackBright(message));
+
+        const params = { name: result.name, arguments: result.input };
+        const { content }: { content: Content[] } = await sendToServer(
+          "tools/call",
+          lastId,
+          params,
+        );
+
+        const contentMsg = {
+          type: "tool_result",
+          tool_use_id: result.id,
+          content: content[0]!.text,
+        };
+        messages.push({ role: "user", content: [contentMsg] });
       }
     }
   }
