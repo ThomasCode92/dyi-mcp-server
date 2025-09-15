@@ -1,26 +1,39 @@
 # DYI MCP Server
 
-The project demonstrates how to create a custom MCP server and client from the ground up without relying on third-party libraries.
-It also illustrates how to integrate this client with an AI agent.
+The project demonstrates how to create a custom MCP server and client from the
+ground up without relying on third-party libraries. It also illustrates how to
+integrate this client with an AI agent.
 
 > This project is based on a couple of YouTube videos by Jack Herrington:
 >
-> - [Build a custom mcp server in 15 mins](https://www.youtube.com/watch?v=nTMSyldeVSw)
+> - [Build a Custom MCP Server in 15 Minutes](https://www.youtube.com/watch?v=nTMSyldeVSw)
 > - [MCP Client Setup in 10 Minutes](https://www.youtube.com/watch?v=S2x1bsMk19I)
 > - [AI Tool Calling](https://www.youtube.com/watch?v=PD2ecDWbeNk)
 
-## Getting Started
+## ☕ About This MCP Server
 
-### Connecting to an AI Agent
+This MCP server implements a **coffee shop** interface that allows AI agents to:
 
-This project uses the [GitHub Copilot Proxy](https://github.com/ericc-ch/copilot-api), which differs from the original videos that demonstrate integration with the Anthropic API.
+- Browse available coffee drinks (Latte, Mocha, Flat White)
+- Get detailed information about each drink including prices and descriptions
 
-### Running the Server and Client
+The coffee shop MCP provides a practical example of building custom MCP tools
+that integrate with AI agents for real-world applications.
 
-The following commands start the MCP server or client.
-**Note:** when the MCP client is started, an MCP server is automatically spawned as a child process.
+## 🛠️ Core Technologies
 
-```bash
-pnpm run dev:server   # start the mcp server, in development mode
-pnpm run dev:client   # start the mcp client, in development mode
-```
+- [Node.js](https://nodejs.org/) - JavaScript runtime.
+- [TypeScript](https://www.typescriptlang.org/) - A superset of JavaScript that
+  adds static types.
+- [Model Context Protocol](https://modelcontextprotocol.io/) - The protocol for
+  building AI applications.
+
+## 📚 Additional Resources
+
+For detailed instructions on interacting with each component:
+
+- **[MCP Server README](./apps/server/README.md)** - Learn how to run and
+  configure the MCP server, use the inspector interface, and connect external
+  clients.
+- **[MCP Client README](./apps/client/README.md)** - Discover how to set up AI
+  agent connections, run the client, and use the interactive terminal interface.
