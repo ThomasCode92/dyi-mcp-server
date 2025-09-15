@@ -20,6 +20,8 @@ This MCP server implements a **coffee shop** interface that allows AI agents to:
 The coffee shop MCP provides a practical example of building custom MCP tools
 that integrate with AI agents for real-world applications.
 
+![Chat with AI](./images/chat_with_ai.png)
+
 ## 🛠️ Core Technologies
 
 - [Node.js](https://nodejs.org/) - JavaScript runtime.
