@@ -149,35 +149,42 @@ const clientInfo = {
         if (tool.type === "text") console.log(tool.text);
       }
 
-      let result = promptResult[promptResult.length - 1]!;
-      while (result.type === "tool_use") {
-        const message = `Requesting tool call ${result.name} - ${JSON.stringify(result.input)}`;
-        console.log(chalk.cyan(message));
+      // Process all tool calls from the AI response
+      const toolCalls = promptResult.filter((r) => r.type === "tool_use");
+      while (toolCalls.length > 0) {
+        const toolResults = []; // Collect all tool results for this batch
 
-        // proxy the tool call, wanted by the AI, to the MCP Server
-        const params = { name: result.name, arguments: result.input };
-        const { content }: { content: Content[] } = await sendToServer(
-          "tools/call",
-          lastId,
-          params,
-        );
+        for (const toolCall of toolCalls) {
+          const message = `Requesting tool call ${toolCall.name} - ${JSON.stringify(toolCall.input)}`;
+          console.log(chalk.cyan(message));
 
-        let contentMsg = {
-          type: "tool_result",
-          tool_use_id: result.id,
-          content: content[0]!.text,
-        };
-        messages.push({ role: "user", content: [contentMsg] });
+          // Proxy the tool call to the MCP Server
+          const params = { name: toolCall.name, arguments: toolCall.input };
+          const { content }: { content: Content[] } = await sendToServer(
+            "tools/call",
+            lastId,
+            params,
+          );
 
+          toolResults.push({
+            type: "tool_result",
+            tool_use_id: toolCall.id,
+            content: content[0]!.text,
+          });
+        }
+
+        // Send all tool results in one message
+        messages.push({ role: "user", content: toolResults });
         const followupResult = await callAIWithTools(messages);
-        console.log(JSON.stringify(followupResult));
         messages.push({ role: "assistant", content: followupResult });
 
         for (const tool of followupResult) {
           if (tool.type === "text") console.log(tool.text);
         }
 
-        result = followupResult[followupResult.length - 1]!;
+        // Check if there are more tool calls to process
+        toolCalls.length = 0;
+        toolCalls.push(...followupResult.filter((r) => r.type === "tool_use"));
       }
     }
   }
